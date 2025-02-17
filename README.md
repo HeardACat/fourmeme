@@ -19,3 +19,11 @@ Start the bot:
 ```
 cargo run --release -- start --ipc-url [Your BSC Node IPC] --private-key [Your Private Key with >8BNB]
 ```
+
+### Example
+
+https://chainlist.org/chain/56
+
+```
+cargo run --release -- run --rpc-url https://binance.llamarpc.com 0x557430d9a09e6ea985fada2588152225bffab5c0ef0d53e5a9c666804baf8ec2
+```
