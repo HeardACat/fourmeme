@@ -5,10 +5,18 @@ edition = "2021"
 
 [dependencies]
 alloy = { version = "0.2", features = ["full", "rpc-client" ] }
+async-stream = "0.3"
+async-trait = "0.1"
+axum = "0.7"
 burberry = { git = "https://github.com/tonyke-bot/burberry.git", rev = "7d180c344187926124da3dd7737e17934f077671" }
 clap = { version = "4.4", features = ["derive", "env"] }
 eyre = "0.6.12"
+futures = "0.3"
 lru = "0.12.4"
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
+tower = "0.4"
 tracing = "0.1.37"
 tracing-subscriber = "0.3.18"
