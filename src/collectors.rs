@@ -1,12 +1,8 @@
-use std::{
-    pin::Pin,
-    sync::Arc,
-    time::Duration,
-};
+use std::{pin::Pin, sync::Arc, time::Duration};
 
 use alloy::{
-    rpc::types::{Block, BlockNumberOrTag, BlockTransactions, Transaction},
     providers::Provider,
+    rpc::types::{Block, BlockNumberOrTag, BlockTransactions, Transaction},
     transports::Transport,
 };
 use burberry::Collector;
@@ -41,7 +37,7 @@ impl<T: Transport + Clone + Send + Sync + 'static> Collector<Block> for PollingB
             let mut interval = time::interval(interval);
             loop {
                 interval.tick().await;
-                
+
                 if let Ok(Some(block)) = provider.get_block_by_number(BlockNumberOrTag::Latest, true).await {
                     let block_number = block.header.number.unwrap();
                     let block_number = block_number.try_into().unwrap_or(0u64);
@@ -80,10 +76,10 @@ impl<T: Transport + Clone + Send + Sync + 'static> Collector<Transaction> for Po
         let stream = async_stream::stream! {
             let mut interval = time::interval(interval);
             let mut seen_txs = std::collections::HashSet::new();
-            
+
             loop {
                 interval.tick().await;
-                
+
                 if let Ok(Some(block)) = provider.get_block_by_number(BlockNumberOrTag::Latest, true).await {
                     match block.transactions {
                         BlockTransactions::Full(txs) => {

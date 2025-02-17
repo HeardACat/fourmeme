@@ -4,7 +4,7 @@ use std::{sync::Arc, time::Instant};
 
 use alloy::{
     primitives::{B256, U256},
-    providers::{IpcConnect, Provider, ProviderBuilder},
+    providers::{Provider, ProviderBuilder},
 };
 use clap::Parser;
 
@@ -15,14 +15,13 @@ pub struct Args {
     tx: B256,
 
     #[arg(long, env = "ETH_RPC_URL")]
-    url: String,
+    rpc_url: String,
 }
 
 pub async fn run(args: Args) {
     tracing_subscriber::fmt().init();
 
-    let provider = ProviderBuilder::new()
-        .on_http(args.url.parse().unwrap());
+    let provider = ProviderBuilder::new().on_http(args.rpc_url.parse().unwrap());
 
     let provider: Arc<dyn Provider<_>> = Arc::new(provider);
 
@@ -69,49 +68,5 @@ pub async fn run(args: Args) {
     println!("profit: {}", solution.profit);
     println!("time: {:?}", optimal_elapsed);
 
-    // Prepare transactions for bundle simulation
-    let mut txs = Vec::new();
-    
-    // Add the original buy transaction
-    txs.push(tx.clone());
-    
-    // Add our solution's sell transaction
-    let sell_tx = solution.to_transaction();
-    txs.push(sell_tx);
-
-    // Create the bundle simulation request
-    let call_bundle = provider
-        .request(
-            "eth_callBundle",
-            [serde_json::json!({
-                "txs": txs,
-                "blockNumber": block_number,
-                "stateBlockNumber": block_number - 1,
-                "timestamp": block.header.timestamp,
-            })]
-        )
-        .await
-        .expect("failed to simulate bundle");
-
-    // Parse and validate the simulation results
-    let simulation_result: serde_json::Value = call_bundle;
-    
-    // Check if simulation was successful
-    if let Some(error) = simulation_result.get("error") {
-        println!("Bundle simulation failed: {}", error);
-        return;
-    }
-
-    // Extract and display relevant simulation results
-    println!("\nBundle Simulation Results:");
-    println!("------------------------");
-    if let Some(success) = simulation_result.get("success") {
-        println!("Simulation successful: {}", success);
-    }
-    
-    if let Some(gas_used) = simulation_result.get("gasUsed") {
-        println!("Total gas used: {}", gas_used);
-    }
-
-    println!("\nValidation complete - bundle can be executed safely.")
+    todo!("use eth_callBundle to simulate and validate result")
 }

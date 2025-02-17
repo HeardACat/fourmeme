@@ -9,14 +9,14 @@ use burberry::{map_collector, Engine};
 use clap::Parser;
 
 use crate::{
-    strategy::{Config, Event, Strategy},
     collectors::{PollingBlockCollector, PollingMempoolCollector},
+    strategy::{Config, Event, Strategy},
 };
 
 #[derive(Debug, Parser)]
 pub struct Args {
     #[arg(long, env = "ETH_RPC_URL")]
-    pub url: String,
+    pub rpc_url: String,
 
     #[arg(long)]
     pub private_key: B256,
@@ -28,8 +28,7 @@ pub struct Args {
 pub async fn run(args: Args) {
     tracing_subscriber::fmt::init();
 
-    let provider = ProviderBuilder::new()
-        .on_http(args.url.parse().unwrap());
+    let provider = ProviderBuilder::new().on_http(args.rpc_url.parse().unwrap());
     let provider: Arc<dyn Provider<_>> = Arc::new(provider);
 
     let chain_id = provider.get_chain_id().await.expect("fail to get chain id");
